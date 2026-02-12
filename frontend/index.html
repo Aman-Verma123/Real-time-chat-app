@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat app </title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-card">
+      <h1>Real Time Chat</h1>
+
+      <ul id="messages"></ul>
+
+      <form>
+        <input type="text" placeholder="Type your message..." />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+<!-- script file -->
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+  const socket = io('http://localhost:3000');
+
+const input = document.querySelector('input');
+const btn = document.querySelector('button');
+const form = document.querySelector('form');
+const messages = document.querySelector('#messages');
+
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  if (input.value.trim() === '') return;
+
+  socket.emit('messageSend', input.value);
+  input.value = '';
+});
+
+  socket.on('message_Distributed_by server', (msg) => {
+    console.log(msg);
+    const li = document.createElement('li');
+    li.textContent = msg;
+    messages.appendChild(li);
+
+  });
+
+</script>
+  
+</body>
+</html>
