@@ -21,9 +21,13 @@
   </div>
 
 <!-- script file -->
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<!-- <script src="http://localhost:3000/socket.io/socket.io.js"></script> -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
 <script>
-  const socket = io('http://localhost:3000');
+  // const socket = io('http://localhost:3000');
+  const socket = io('https://real-time-chat-app-1-3tv1.onrender.com');
+
 
 const input = document.querySelector('input');
 const btn = document.querySelector('button');
@@ -51,4 +55,5 @@ form.addEventListener('submit', (e) => {
 </script>
   
 </body>
+
 </html>
