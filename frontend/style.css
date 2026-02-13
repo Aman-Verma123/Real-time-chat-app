@@ -16,7 +16,7 @@ body {
 }
 
 /* Main Container */
-.chat-container {
+.chat_container {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -123,4 +123,72 @@ form button {
 form button:hover {
   transform: scale(1.05);
   box-shadow: 0 0 15px rgba(255,75,43,0.6);
+}
+
+
+/* join section: */
+
+/* Card Container */
+#joinSection {
+  background: #ffffff;
+  padding: 40px 30px;
+  width: 350px;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Heading */
+#joinSection h1 {
+  margin-bottom: 25px;
+  font-size: 22px;
+  color: #333;
+}
+
+/* Input Field */
+#username {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 14px;
+  margin-bottom: 20px;
+  transition: 0.3s;
+}
+
+#username:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
+}
+
+/* Button */
+#joinBtn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #667eea;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#joinBtn:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+}
+
+/* Small Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
