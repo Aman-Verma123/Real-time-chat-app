@@ -17,7 +17,8 @@ body {
 
 /* Main Container */
 .chat_container {
-  width: 100%;
+  /* width: 100%; */
+  width: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -192,3 +193,4 @@ form button:hover {
     transform: translateY(0);
   }
 }
+
