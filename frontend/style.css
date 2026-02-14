@@ -1,30 +1,5 @@
-<<<<<<< HEAD
 /* ================= RESET ================= */
 /* commit kiya typing, sidebar ke baad responsive ke baad */
-=======
-/* =========================
-   GLOBAL RESET & VARIABLES
-========================= */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
-:root {
-  --bg-main: radial-gradient(circle at top left, #1e1e2f, #121212);
-  --card-bg: #1c1c2b;
-  --sidebar-bg: #111827;
-  --input-bg: #2a2a3d;
-
-  --primary: linear-gradient(135deg, #6a11cb, #2575fc);
-  --danger: linear-gradient(135deg, #ff416c, #ff4b2b);
-
-  --text-light: #ffffff;
-  --text-muted: #9ca3af;
-
-  --radius-lg: 20px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
-}
-
->>>>>>> origin/main
 * {
   margin: 0;
   padding: 0;
@@ -32,11 +7,7 @@
   font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* =========================
-   BODY LAYOUT
-========================= */
 body {
-<<<<<<< HEAD
   height: 100vh;
   background: radial-gradient(circle at top left, #1e1e2f, #121212);
   overflow: hidden; /* 👈 BODY NEVER SCROLL */
@@ -110,68 +81,13 @@ body {
   border-radius: 18px;
   overflow-y: auto; /* 👈 sidebar scroll */
   flex-shrink: 0;
-=======
-  min-height: 100svh;
-  background: var(--bg-main);
-
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-
-  padding: 20px;
-}
-
-/* =========================
-   MAIN CHAT CONTAINER
-========================= */
-.chat_container {
-  width: 100%;
-  max-width: 1000px;
-  height: calc(100svh - 40px);
-
-  display: flex;
-}
-
-/* =========================
-   CHAT LAYOUT (SIDEBAR + CHAT)
-========================= */
-.chat-layout {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  gap: 20px;
-}
-
-/* =========================
-   SIDEBAR
-========================= */
-.sidebar {
-  width: 220px;
-  min-height: 100%;
-
-  background: var(--sidebar-bg);
-  color: var(--text-light);
-
-  padding: 16px;
-  border-radius: var(--radius-md);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.05);
-
-  overflow-y: auto;
->>>>>>> origin/main
 }
 
 .sidebar h3 {
   font-size: 13px;
-<<<<<<< HEAD
   margin-bottom: 10px;
   text-transform: uppercase;
   color: #9ca3af;
-=======
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 12px;
->>>>>>> origin/main
 }
 
 #usersList {
@@ -182,21 +98,9 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-<<<<<<< HEAD
   padding: 8px;
   border-radius: 8px;
   font-size: 14px;
-=======
-
-  padding: 8px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-#usersList li:hover {
-  background: rgba(255,255,255,0.06);
->>>>>>> origin/main
 }
 
 .user-dot {
@@ -206,26 +110,11 @@ body {
   border-radius: 50%;
 }
 
-<<<<<<< HEAD
 /* ================= CHAT CARD ================= */
 .chat-card {
   flex: 1;
   background: #1c1c2b;
   border-radius: 22px;
-=======
-/* =========================
-   CHAT CARD
-========================= */
-.chat-card {
-  flex: 1;
-  min-height: 0;
-
-  background: var(--card-bg);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.05);
-
->>>>>>> origin/main
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -233,7 +122,6 @@ body {
 
 /* Header */
 .chat-card h1 {
-<<<<<<< HEAD
   padding: 16px;
   text-align: center;
   font-size: 17px;
@@ -251,19 +139,6 @@ border-radius: 18px 18px 0 0;
 }
 
 /* ================= MESSAGES ================= */
-=======
-  padding: 18px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-light);
-  background: var(--primary);
-}
-
-/* =========================
-   MESSAGES AREA
-========================= */
->>>>>>> origin/main
 #messages {
   flex: 1;
   list-style: none;
@@ -271,22 +146,10 @@ border-radius: 18px 18px 0 0;
   overflow-y: auto; /* 👈 ONLY CHAT SCROLLS */
 }
 
-<<<<<<< HEAD
-=======
-#messages::-webkit-scrollbar {
-  width: 6px;
-}
-#messages::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 10px;
-}
-
-/* Message Bubble Base */
->>>>>>> origin/main
 #messages li {
   padding: 10px 14px;
+  border-radius: 18px;
   margin-bottom: 12px;
-<<<<<<< HEAD
   max-width: 75%;
   font-size: 14px;
 }
@@ -309,69 +172,10 @@ border-radius: 18px 18px 0 0;
 .system-message {
   text-align: center;
   font-style: italic;
-=======
-  max-width: 70%;
-  border-radius: 18px;
-
-  font-size: 14px;
-  color: white;
-  word-wrap: break-word;
-
-  animation: fadeIn 0.25s ease-in-out;
-}
-/* My Message */
-.my-message {
-  margin-left: auto;
-  text-align: right;
-
-  background: linear-gradient(
-    135deg,
-    #83563c,   /* warm coral */
-    #658a5c    /* deep pink */
-  );
-
-  color: #ffffff;
-
-  box-shadow: 
-    0 8px 18px rgba(221, 36, 118, 0.35),
-    inset 0 0 0 rgba(255,255,255,0.1);
-
-  border-bottom-right-radius: 6px; /* chat bubble feel */
-}
-
-/* Other Message */
-.other-message {
-  margin-right: auto;
-  text-align: left;
-
-  background: linear-gradient(
-    135deg,
-    #2b5876,   /* deep blue */
-    #4e4376    /* muted purple */
-  );
-
-  color: #e5e7eb; /* soft white */
-
-  box-shadow: 
-    0 6px 16px rgba(0, 0, 0, 0.35),
-    inset 0 0 0 rgba(255,255,255,0.08);
-
-  border-bottom-left-radius: 6px; /* chat bubble feel */
-}
-
-
-/* System Message */
-.system-message {
-  margin: 10px auto;
-  text-align: center;
-  font-style: italic;
-  font-size: 14px;
->>>>>>> origin/main
   color: #aaa;
   background: transparent;
 }
 
-<<<<<<< HEAD
 .leave-notification {
   text-align: center;
   font-size: 13px;
@@ -395,52 +199,9 @@ form {
   display: flex;
   gap: 10px;
   padding: 14px;
-=======
-/* Leave Notification */
-.leave-notification {
-  margin: 10px auto;
-  padding: 6px 12px;
-
-  font-size: 13px;
-  font-style: italic;
-  color: #b91c1c;
-
-  background: rgba(239,68,68,0.12);
-  border-radius: var(--radius-sm);
-}
-
-/* =========================
-   TYPING INDICATOR
-========================= */
-.typing-indicator {
-  height: 16px;
-  margin: 6px 14px;
-
-  font-size: 13px;
-  font-style: italic;
-  color: #888;
-}
-
-.typing-dots span {
-  animation: blink 1.4s infinite both;
-}
-
-.typing-dots span:nth-child(2) { animation-delay: .2s }
-.typing-dots span:nth-child(3) { animation-delay: .4s }
-
-/* =========================
-   MESSAGE FORM
-========================= */
-form {
-  display: flex;
-  padding: 14px;
-  gap: 10px;
-
->>>>>>> origin/main
   background: #151522;
 }
 
-<<<<<<< HEAD
 #messageInput {
   flex: 1;
   padding: 12px 16px;
@@ -636,123 +397,4 @@ form {
 
   background: rgba(239,68,68,0.12);
   border-radius: var(--radius-sm);
-=======
-form input {
-  flex: 1;
-  padding: 12px 16px;
-
-  background: var(--input-bg);
-  color: white;
-
-  border: none;
-  border-radius: 30px;
-  outline: none;
-}
-
-form button {
-  padding: 10px 22px;
-  border-radius: 30px;
-  border: none;
-  cursor: pointer;
-
-  font-weight: 500;
-  color: white;
-  background: var(--danger);
-
-  transition: 0.3s;
-}
-
-form button:hover {
-  transform: scale(1.05);
-}
-
-/* =========================
-   JOIN OVERLAY
-========================= */
-#joinSection {
-  position: fixed;
-  inset: 0;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(5px);
-  z-index: 9999;
-}
-
-.joinCard {
-  width: 100%;
-  max-width: 420px;
-  padding: 36px 30px;
-
-  background: white;
-  border-radius: var(--radius-md);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.3);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  animation: scaleIn 0.35s ease;
-}
-
-.joinCard h1 {
-  margin-bottom: 24px;
-  font-size: 22px;
-  color: #333;
-}
-
-.joinCard input,
-.joinCard button {
-  width: 100%;
-  padding: 13px;
-  border-radius: 10px;
-}
-
-.joinCard input {
-  border: 1px solid #ccc;
-  margin-bottom: 18px;
-}
-
-.joinCard button {
-  border: none;
-  color: white;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  cursor: pointer;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-  .chat-layout {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    max-height: 30vh;
-  }
-}
-
-/* =========================
-   ANIMATIONS
-========================= */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes blink {
-  0% { opacity: .2 }
-  20% { opacity: 1 }
-  100% { opacity: .2 }
-}
-
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(.92) }
-  to { opacity: 1; transform: scale(1) }
->>>>>>> origin/main
 }
