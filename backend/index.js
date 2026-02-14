@@ -44,18 +44,27 @@ const users = {};
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  // 👇 Jab username aaye
+
+
+  // 👇 Set Username
   socket.on("setUsername", (username) => {
     users[socket.id] = username;
 
-    console.log("Username saved:", username);
+    
+    // sidebar ke liye sabko users ki list bhejna
+  io.emit("users-update", Object.values(users));
 
+
+    // console.log("Username saved:", username);
     // Optional: sabko batao user join hua
-    io.emit("message_Distributed_by server", {
-      name: "System",
+    // io.broadcast.emit("message_Distributed_by server", { io nhi socket hoga
+    socket.broadcast.emit("message_Distributed_by server", {
+      name: "🔔notification",
       message: `${username} joined the chat`
     });
   });
+
+
 
   // // 👇 Jab message aaye
   // socket.on('messageSend', (msg) => {
@@ -80,31 +89,48 @@ socket.on('messageSend', (msg) => {
 
   io.emit('message_Distributed_by server', {
     name: username,
-    message: msg
+    message: msg,
+    senderId: socket.id
+  });
+});
+// typing indicator ke liye event............................
+socket.on('typing', () => {
+  const username = users[socket.id];
+
+  socket.broadcast.emit('userTyping', {
+    username
   });
 });
 
 
-
-
-  // 👇 Disconnect hone par
-  socket.on('disconnect', () => {
-
-    const username = users[socket.id];
-
-    if (username) {
-      io.emit("message_Distributed_by server", {
-        name: "System",
-        message: `${username} left the chat`
-      });
-
-      delete users[socket.id];
-    }
-
-    console.log('User Disconnected:', socket.id);
-  });
+socket.on('stopTyping', () => {
+  socket.broadcast.emit('userStopTyping');
 });
 
+
+
+// ...........................................................
+socket.on('disconnect', () => {
+
+  const username = users[socket.id];
+
+  if (username) {
+    // 🔥 pehle user remove karo
+    delete users[socket.id];
+
+    // 🔥 fir updated list bhejo
+    io.emit("users-update", Object.values(users));
+
+    // optional: leave message
+    io.emit("message_Distributed_by server", {
+      name: "leave",
+      message: `${username} left the chat`
+    });
+  }
+
+  console.log('User Disconnected:', socket.id);
+});
+});
 
 // 👇 YE IMPORTANT HAI — bahar hona chahiye
 server.listen(port, () => {
