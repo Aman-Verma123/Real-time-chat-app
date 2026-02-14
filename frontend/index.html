@@ -7,19 +7,43 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- join section -->
- <div id="joinSection">
-  <h1>Enter Your Name to Start Chat</h1>
-  <input type="text" id="username" placeholder="Enter your name" />
-  <button id="joinBtn">Join Chat</button>
+<!-- join section (overlay) -->
+<div id="joinSection">
+  <div class="joinCard">
+    <h1>Enter Your Name to Start Chat</h1>
+    <input type="text" id="username" placeholder="Enter your name" />
+    <button id="joinBtn">Join Chat</button>
+  </div>
 </div>
 
+
+
+
   <div class=" chat_container" style="display:none;">
-    <div class="chat-card">
+  
+<!-- sidebar section -->
+    <div class="chat-layout">
+
+      <div class="sidebar" id="sidebar" >
+        <h3>Online Users</h3>
+        <ul id="usersList"></ul>
+      </div>
+
+
+      
+      <!-- main chat section -->
+
+       <div class="chat-card">
+         <div class="chat-header">
       <h1>Real Time Chat</h1>
+      <button id="menuBtn" class="menu-btn">☰</button>
+
+     </div>
 
       <ul id="messages"></ul>
+   
+<!-- typing indicator -->
+     <div id="typing-indicator" class="typing-indicator"></div>
 
       <form>
         <input type="text" id="messageInput" placeholder="Type your message..." />
@@ -27,18 +51,22 @@
         <button type="submit" id="submit_button">Send</button>
       </form>
     </div>
+
+    </div>
+
   </div>
 
 <!-- script file -->
+ <!-- end me kebal ye hi link chalu krni he -->
  <!-- <script src="https://real-time-chat-app-1-3tv1.onrender.com/socket.io/socket.io.js"></script> -->
-<!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script> -->
+
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
 
 <script>
   // backend se connection ke time only use this url
   const socket = io('https://real-time-chat-app-1-3tv1.onrender.com');
-  // const socket = io();
+ 
   // const socket = io("http://localhost:3000");
 
 
@@ -53,6 +81,43 @@ const usernameInput = document.querySelector('#username');
 const joinbtn = document.querySelector('#joinBtn');
 const joinSection = document.getElementById('joinSection');
 const chatContainer = document.querySelector('.chat_container');
+const typingDiv = document.getElementById('typing-indicator');
+const usersList = document.getElementById('usersList');
+
+// typing indicator ke liye variables..................................
+let typingTimeout;
+let isTyping = false;
+
+input.addEventListener('input', () => {
+  if (!isTyping) {
+    isTyping = true;
+    socket.emit('typing');
+  }
+
+  clearTimeout(typingTimeout);
+
+  typingTimeout = setTimeout(() => {
+    isTyping = false;
+    socket.emit('stopTyping');
+  }, 2000); // 👈 debounce: 2 sec
+});
+
+
+// socket.on('userTyping', (data) => {
+//   typingDiv.textContent = `${data.username} is typing... ✍️`;
+// });
+socket.on('userTyping', (data) => {
+  typingDiv.innerHTML = `${data.username} is typing
+    <span class="typing-dots">     <span>.</span><span>.</span><span>.</span>     </span>
+  `;
+});
+
+socket.on('userStopTyping', () => {
+  typingDiv.textContent = '';
+});
+
+
+// ........................................................................
 
 
 let username = '';
@@ -85,14 +150,79 @@ form.addEventListener('submit', (e) => {
 });
 
   socket.on('message_Distributed_by server', (data) => {
+
+ const li = document.createElement('li');
+
+
+  if(data.name === '🔔notification') {
+    li.classList.add('system-message');
+    li.textContent = data.message;
+      messages.appendChild(li);
+    return // 👈 IMPORTANT
+  }
+  if(data.name === 'leave') {
+    li.classList.add('leave-notification');
+    li.textContent = data.message;
+      messages.appendChild(li);
+    return // 👈 IMPORTANT
+  }
+
     // console.log(data);
-    console.log("Received data from backend : ", data);
-    const li = document.createElement('li');
+    // console.log("Received data from backend : ", data);
+   
+    // 👉 check: message mera hai ya nahi
+  if (data.senderId === socket.id) {
+    li.classList.add('my-message');
+  } else {
+    li.classList.add('other-message')
+  }
+
     // li.textContent = msg;
       li.textContent = `${data.name}: ${data.message}`;
     messages.appendChild(li);
 
   });
+
+  // sidebar ke liye user list update karna
+  
+socket.on("users-update", (users) => {
+  usersList.innerHTML = '';
+
+  users.forEach((user) => {
+    const li = document.createElement('li');
+
+    li.innerHTML = `
+      <span class="user-dot"></span>
+      <span>${user}</span>
+    `;
+
+    usersList.appendChild(li);
+  });
+});
+// ...................................................
+
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.getElementById("sidebar");
+
+let sidebarOpen = false;
+
+menuBtn.addEventListener("click", () => {
+  sidebarOpen = !sidebarOpen;
+
+  if (sidebarOpen) {
+    sidebar.classList.add("active");
+  } else {
+    sidebar.classList.remove("active");
+  }
+});
+
+/* Optional: click user → auto close sidebar (mobile UX 🔥) */
+usersList.addEventListener("click", () => {
+  sidebar.classList.remove("active");
+  sidebarOpen = false;
+});
+
+
 
 </script>
   
