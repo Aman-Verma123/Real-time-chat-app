@@ -1,3 +1,4 @@
+<!-- sound add success -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +38,10 @@
        <div class="chat-card">
          <div class="chat-header">
       <h1>Real Time Chat</h1>
+      <button id="muteBtn" class="mute-btn">🔊</button>
+
       <button id="menuBtn" class="menu-btn">☰</button>
+
 
      </div>
 
@@ -60,11 +64,24 @@
 <!-- script file -->
  <!-- end me kebal ye hi link chalu krni he -->
  <!-- <script src="https://real-time-chat-app-1-3tv1.onrender.com/socket.io/socket.io.js"></script> -->
+<!-- version issu aa sakta he niche wale me  -->
+<!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script> -->
+ <script src="/socket.io/socket.io.js"></script>
 
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
 
 <script>
+
+const sendSound = new Audio("/sounds/send.mp3");
+const receiveSound = new Audio("/sounds/receive.mp3");
+// localhost ke liye niche wala
+// const sendSound = new Audio("http://localhost:3000/sounds/send.mp3");
+// const receiveSound = new Audio("http://localhost:3000/sounds/receive.mp3");
+
+
+
+
+
   // backend se connection ke time only use this url
   const socket = io('https://real-time-chat-app-1-3tv1.onrender.com');
  
@@ -125,6 +142,20 @@ let username = '';
 
 joinbtn.addEventListener('click', ()=> 
 {
+
+
+  // 🔓 AUDIO UNLOCK (browser policy)
+  sendSound.play().then(() => sendSound.pause()).catch(()=>{});
+  receiveSound.play().then(() => receiveSound.pause()).catch(()=>{});
+// 1️⃣ User ne Join button click kiya  // ✔️ browser: “ok user involved”
+
+// 2️⃣ tumne play() call kiya  // ✔️ browser: “sound allowed”
+
+// 3️⃣ turant pause() kar diya  // ✔️ sound sunai bhi nahi diya
+
+// 📌 Lekin browser ke dimaag me ab ye set ho gaya:
+// “Is page pe audio allowed hai”
+
   username= usernameInput.value.trim();
 
     if (!username) {
@@ -147,52 +178,194 @@ form.addEventListener('submit', (e) => {
   if (input.value.trim() === '') return;
 
   socket.emit('messageSend', input.value);
+
+  
+  sendSound.currentTime = 0; // rewind
+  sendSound.play();          // 🔊 SEND SOUND
+
+
   input.value = '';
 });
 
-  socket.on('message_Distributed_by server', (data) => {
+//   socket.on('message_Distributed_by server', (data) => {
 
- const li = document.createElement('li');
+//  const li = document.createElement('li');
+
+// // ........time stamp...........................
 
 
-  if(data.name === '🔔notification') {
+
+// // .............................................
+
+//   if(data.name === '🔔notification') {
+//     li.classList.add('system-message');
+//     li.textContent = data.message;
+//       messages.appendChild(li);
+
+//       // scroll to bottom when new message arrives
+//         messages.scrollTop = messages.scrollHeight; // 👈 ADD
+// //         🔹 scrollHeight kya hota hai? // 👉 total height (andar ka pura content)
+//     return // 👈 IMPORTANT
+//   }
+//   if(data.name === 'leave') {
+//     li.classList.add('leave-notification');
+//     li.textContent = data.message;
+//       messages.appendChild(li);
+//       // scroll to bottom when new message arrives
+//         messages.scrollTop = messages.scrollHeight; // 👈 ADD
+//     return // 👈 IMPORTANT
+//   }
+
+//     // console.log(data);
+//     // console.log("Received data from backend : ", data);
+   
+//     // 👉 check: message mera hai ya nahi
+//   if (data.senderId === socket.id) {
+//     li.classList.add('my-message');
+//   } else {
+//     li.classList.add('other-message')
+//   }
+
+//     // li.textContent = msg;
+//       li.textContent = `${data.name}: ${data.message}`;
+//     messages.appendChild(li);
+
+//     // scroll to bottom when new message arrives
+//         messages.scrollTop = messages.scrollHeight; // 👈 ADD
+
+//   });
+
+  // sidebar ke liye user list update karna
+// // ...........................................................................
+// Step by step socho:
+
+// 1️⃣ li bana
+// 2️⃣ span bana → message ke liye
+// 3️⃣ span bana → time ke liye
+// 4️⃣ dono ko li ke andar daala
+// 5️⃣ li ko #messages me daala
+
+// Visual structure:
+
+// <li class="my-message">
+//   <span>Aman: Hello</span>
+//   <span class="msg-time">10:42 PM</span>
+// </li>
+
+// socket.on('message_Distributed_by server', (data) => {
+
+//   const li = document.createElement('li');
+
+//   // ---------- TIME ----------
+//   const date = new Date(data.time);
+//   const time = date.toLocaleTimeString([], {
+//     hour: '2-digit',
+//     minute: '2-digit'
+//   });
+
+//   // ---------- SYSTEM / LEAVE ----------
+//   if (data.name === '🔔notification') {
+//     li.classList.add('system-message');
+//     li.textContent = data.message;
+//     messages.appendChild(li);
+//     messages.scrollTop = messages.scrollHeight;
+//     return;
+//   }
+
+//   if (data.name === 'leave') {
+//     li.classList.add('leave-notification');
+//     li.textContent = data.message;
+//     messages.appendChild(li);
+//     messages.scrollTop = messages.scrollHeight;
+//     return;
+//   }
+
+//   // ---------- MY / OTHER MESSAGE ----------
+//   if (data.senderId === socket.id) {
+//     li.classList.add('my-message');
+//   } else {
+//     li.classList.add('other-message');
+//   }
+
+//   // 🔹 message text
+//   const msgText = document.createElement('span');
+//   // msgText.textContent = `${data.name} : ${data.message}`;
+//   // msgText.innerHTML = `<i>${data.name}</i> : ${data.message}`;
+//   msgText.innerHTML = `<i class="username">${data.name}</i> : ${data.message}`;
+
+
+
+//   // 🔹 time span
+//   const timeSpan = document.createElement('span');
+//   timeSpan.classList.add('msg-time');
+//   timeSpan.textContent = time;
+
+//   // 🔹 append both inside li
+//   li.appendChild(msgText);
+//   li.appendChild(timeSpan);
+
+//   // 🔹 finally append li
+//   messages.appendChild(li);
+//   messages.scrollTop = messages.scrollHeight;
+// });
+
+socket.on('message_Distributed_by server', (data) => {
+
+  const li = document.createElement('li');
+
+  // ---------- TIME ----------
+  const date = new Date(data.time);
+  const time = date.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  // ---------- SYSTEM MESSAGE ----------
+  if (data.name === '🔔notification') {
     li.classList.add('system-message');
     li.textContent = data.message;
-      messages.appendChild(li);
-
-      // scroll to bottom when new message arrives
-        messages.scrollTop = messages.scrollHeight; // 👈 ADD
-    return // 👈 IMPORTANT
+    messages.appendChild(li);
+    messages.scrollTop = messages.scrollHeight;
+    return;
   }
-  if(data.name === 'leave') {
+
+  // ---------- LEAVE MESSAGE ----------
+  if (data.name === 'leave') {
     li.classList.add('leave-notification');
     li.textContent = data.message;
-      messages.appendChild(li);
-      // scroll to bottom when new message arrives
-        messages.scrollTop = messages.scrollHeight; // 👈 ADD
-    return // 👈 IMPORTANT
+    messages.appendChild(li);
+    messages.scrollTop = messages.scrollHeight;
+    return;
   }
 
-    // console.log(data);
-    // console.log("Received data from backend : ", data);
-   
-    // 👉 check: message mera hai ya nahi
+  // ---------- MY / OTHER ----------
   if (data.senderId === socket.id) {
     li.classList.add('my-message');
   } else {
-    li.classList.add('other-message')
+    li.classList.add('other-message');
   }
 
-    // li.textContent = msg;
-      li.textContent = `${data.name}: ${data.message}`;
-    messages.appendChild(li);
+  // 🔥 ONLY innerHTML (NO span create)
+  li.innerHTML = `
+    <i class="username">${data.name} :</i>  ${data.message}
+    <div class="msg-time">${time}</div>
+  `;
 
-    // scroll to bottom when new message arrives
-        messages.scrollTop = messages.scrollHeight; // 👈 ADD
+  messages.appendChild(li);
+// .........................................................sound receive....................
+const isMine = data.senderId === socket.id;
+ if (!isMine) {
 
-  });
+    receiveSound.currentTime = 0;
+    receiveSound.play();
+  }
 
-  // sidebar ke liye user list update karna
+  messages.scrollTop = messages.scrollHeight;
+});
+
+
+
+
   
 socket.on("users-update", (users) => {
   usersList.innerHTML = '';
@@ -233,23 +406,33 @@ usersList.addEventListener("click", () => {
 
 input.addEventListener("keydown", (e) => {
 
+  
   if (e.key === "Enter") {
     // if (e.key === "Enter" && !e.shiftKey) {
     //shift+enter textarea pr work krta he not input
-
     e.preventDefault();   // new line banne se roko
     form.requestSubmit(); // message send
   }
-
-
+ 
 });
 
+// mute button functionality
+let isMuted = false;
 
+const muteBtn = document.getElementById("muteBtn");
 
+muteBtn.addEventListener("click", () => {
+  isMuted = !isMuted;
+
+  sendSound.muted = isMuted;
+  receiveSound.muted = isMuted;
+
+  muteBtn.textContent = isMuted ? "🔇" : "🔊";
+    muteBtn.classList.toggle("muted", isMuted);
+});
 
 
 </script>
   
 </body>
 </html>
-
