@@ -27,7 +27,8 @@ const path = require("path");
 
 
 
-app.use(express.static(path.join(__dirname, "../frontend/public")));
+// app.use(express.static(path.join(__dirname, "../frontend/public")));
+app.use("/sounds", express.static(path.join(__dirname, "sounds")));
 
 
 
@@ -147,3 +148,4 @@ socket.on('disconnect', () => {
 server.listen(port, () => {
   console.log(`Socket server working On ${port}`);
 });
+
