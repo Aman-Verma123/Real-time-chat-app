@@ -1,438 +1,594 @@
-/* sound css success */
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat app </title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<!-- join section (overlay) -->
-<div id="joinSection">
-  <div class="joinCard">
-    <h1>Enter Your Name to Start Chat</h1>
-    <input type="text" id="username" placeholder="Enter your name" />
-     
-    <button id="joinBtn">Join Chat</button>
-  </div>
-</div>
+/* ================= RESET ================= */
+/* commit kiya typing, sidebar ke baad responsive ke baad */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, sans-serif;
+}
 
-
-
-
-  <div class=" chat_container" style="display:none;">
+html, body {
+  height: 100%;
   
-<!-- sidebar section -->
-    <div class="chat-layout">
+}
 
-      <div class="sidebar" id="sidebar" >
-        <h3>Online Users</h3>
-        <ul id="usersList"></ul>
-      </div>
-
-
-      
-      <!-- main chat section -->
-
-       <div class="chat-card">
-         <div class="chat-header">
-      <h1>Real Time Chat</h1>
-      <button id="muteBtn" class="mute-btn">🔊</button>
-
-      <button id="menuBtn" class="menu-btn">☰</button>
-
-
-     </div>
-
-      <ul id="messages"></ul>
-   
-<!-- typing indicator -->
-     <div id="typing-indicator" class="typing-indicator"></div>
-
-      <form>
-        <input type="text" id="messageInput" placeholder="Type your message..." />
-         
-        <button type="submit" id="submit_button">Send</button>
-      </form>
-    </div>
-
-    </div>
-
-  </div>
-
-<!-- script file -->
- <!-- end me kebal ye hi link chalu krni he -->
- <!-- <script src="https://real-time-chat-app-1-3tv1.onrender.com/socket.io/socket.io.js"></script> -->
-<!-- version issu aa sakta he niche wale me  -->
-<!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script> -->
- <script src="/socket.io/socket.io.js"></script>
-
-
-
-<script>
-
-const sendSound = new Audio("/sounds/send.mp3");
-const receiveSound = new Audio("/sounds/receive.mp3");
-// localhost ke liye niche wala
-// const sendSound = new Audio("http://localhost:3000/sounds/send.mp3");
-// const receiveSound = new Audio("http://localhost:3000/sounds/receive.mp3");
+body {
+  background: radial-gradient(circle at top left, #1e1e2f, #121212);
+  overflow: hidden;
+}
 
 
 
 
+/* ================= JOIN OVERLAY ================= */
+#joinSection {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
 
-  // backend se connection ke time only use this url
-  const socket = io('https://real-time-chat-app-1-3tv1.onrender.com');
+.joinCard {
+  background: #fff;
+  width: 90%;
+  max-width: 420px;
+  padding: 32px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+}
+
+.joinCard h1 {
+  font-size: 22px;
+  margin-bottom: 22px;
+  color: #333;
+}
+
+.joinCard input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.joinCard button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg,#414e8b,#371658);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* ================= MAIN CONTAINER ================= */
+.chat_container {
+   /*height: 100vh; keep full height */
+   /* 100dvh = real visible screen height
+👉 Android buttons / browser bar sab count hota hai */
+   height: 100dvh; /* 🔥 mobile-safe viewport */
+  display: flex;
+  flex-direction: column;
+}
+
+
+.chat-layout {
+  display: flex;
+  height: 100%;
+  padding: 16px;
+  gap: 16px;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 230px;
+  background: #131b2c;
+  color: #fff;
+  padding: 14px;
+  border-radius: 18px;
+  overflow-y: auto; /* 👈 sidebar scroll */
+  flex-shrink: 0;
+}
+
+.sidebar h3 {
+  font-size: 13px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+#usersList {
+  list-style: none;
+}
+
+#usersList li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.user-dot {
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+}
+
+/* ================= CHAT CARD ================= */
+.chat-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* keep input at bottom */
+  overflow: hidden;
+  border-radius: 22px;
+}
+
+/* Header */
+.chat-card h1 {
+  padding: 16px;
+  text-align: center;
+  font-size: 17px;
+  color: #fff;
+/* background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); */
+/* background: linear-gradient(160deg, #0b0c10, #1f2833, #4b6584); */
+/* background: linear-gradient(145deg, #300032, #523a5c, #11442b); */
+background: linear-gradient(135deg, #0b4433bd, #0e5557d0, #062b29e5);
+  background: linear-gradient(135deg, rgba(40, 75, 17, 0.5), rgba(19, 42, 82, 0.5));
+border-radius: 18px 18px 0 0;
+
+
+
+
+}
+
+/* ================= MESSAGES ================= */
+/* #messages {
+  flex: 1;
+  list-style: none;
+  padding: 16px;
+  overflow-y: auto; 
+}/* 👈 ONLY CHAT SCROLLS */
+
+
+
+#messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  padding-bottom: 80px; /* input ke liye space */
+   scroll-behavior: smooth;
+   list-style: none; 
+}
+
+
+
+#messages li {
+  padding: 10px 14px;
+  border-radius: 18px;
+  margin-bottom: 12px;
+  max-width: 75%;
+  font-size: 14px;
+}
+
+/* 🔥 KEEP YOUR COLORS EXACT */
+.my-message {
+  margin-left: auto;
+  text-align: right;
+  color: #fff;
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+}
+
+.other-message {
+  margin-right: auto;
+  text-align: left;
+  color: #fff;
+  background: linear-gradient(135deg, #510e97, #154699);
+}
+
+.system-message {
+  text-align: center;
+  font-style: italic;
+  color: #aaa;
+  background: transparent;
+}
+
+.leave-notification {
+  text-align: center;
+  font-size: 13px;
+  background: rgba(239,68,68,0.15);
+  color: #fecaca;
+  padding: 6px 12px;
+  border-radius: 10px;
+  margin: 10px auto;
+}
+
+/* ================= TYPING ================= */
+.typing-indicator {
+  font-size: 13px;
+  color: #9ca3af;
+  padding: 0 16px 6px;
+  min-height: 18px;
+}
+
+/* ================= INPUT ================= */
+
+/* form {
+  display: flex;
+  gap: 10px;
+  padding: 14px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  background: #151522;
+  z-index: 10; /* optional: make sure above other content 
+} */
+form {
+  position: sticky;
+  bottom: 0;
+
+  display: flex;
+  gap: 10px;
+
+  padding: 14px;
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+
+  background: #151522;
+  z-index: 50;
+}
+
+
+
+#messageInput {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 30px;
+  border: none;
+  background: #2a2a3d;
+  color: #fff;
+  font-size: 15px;
+}
+
+#submit_button {
+  padding: 10px 22px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(135deg,#ff416c,#ff4b2b);
+  color: white;
+  cursor: pointer;
+}
+
+/* ================= MOBILE PERFECT FIX ================= */
+@media (max-width: 768px) {
+
+
+  .chat-layout {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-height: 120px; /* 👈 NOT HALF SCREEN */
+    overflow-y: auto;
+  }
+
+  .chat-card {
+    flex: 1; /* 👈 TAKES REST SCREEN */
+    min-height: 0;
+    /* background-color: #b91c1c; */
+  }
+
+  #messages {
+    max-height: 100%;
+  }
+
+  #messages li {
+    max-width: 85%;
+    font-size: 13px;
+  }
+}
+/* ================= MOBILE PERFECT FIX ================= ..............................*/
+
+/* ===== Header with menu ===== */
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  /* background: linear-gradient(135deg,#6a11cb,#2575fc); */
+  
+  /* Glassy dark card with gradient overlay */
+  background: linear-gradient(135deg, rgba(40, 75, 17, 0.5), rgba(19, 42, 82, 0.5));
+  
+  /* Optional: blur behind transparent background */
+  backdrop-filter: blur(5px);
+  color: #fff;
+}
+
+.chat-header h1 {
+  flex: 1;
+  font-size: 17px;
+  text-align: center;
+}
+
+.menu-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.sidebar {
+  width: 260px;
+  padding: 20px 25px;
+  
+  /* Scrollable only when content exceeds height */
+  max-height: 100vh; /* viewport ke height tak limit */
+  overflow-y: auto;
+
+  transition: transform 0.3s ease;
+
+  /* Hide scrollbar (optional) */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+
+/* ===== Mobile behavior ===== */
+@media (max-width: 768px) {
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background: #111827;
+    z-index: 2000;
+
+    transform: translateX(-100%); /* hidden */
+  }
+
+  .sidebar.active {
+    transform: translateX(0); /* visible */
+  }
+
+  .chat-layout {
+    padding: 0;
+  }
+
+  .chat-card {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+}
+
+
+
+
+/* My Message */
+.my-message {
+  margin-left: auto;
+  text-align: right;
+
+  background: linear-gradient(
+    135deg,
+    #684531,   /* warm coral */
+    #41583b    /* deep pink */
+  );
+
+  color: #ffffff;
+
+  box-shadow: 
+    0 6px 6px rgba(45, 158, 35, 0.35),
+    inset 0 0 0 rgba(255,255,255,0.1);
+
+  border-bottom-right-radius: 6px; /* chat bubble feel */
+}
+
+/* Other Message */
+.other-message {
+  margin-right: auto;
+  text-align: left;
+
+  background: linear-gradient(
+    135deg,
+    #2b5876,   /* deep blue */
+    #4e4376    /* muted purple */
+  );
+
+  color: #e5e7eb; /* soft white */
+
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 rgba(255,255,255,0.08);
+
+  border-bottom-left-radius: 6px; /* chat bubble feel */
+}
+
+
+/* System Message */
+.system-message {
+  margin: 10px auto;
+  text-align: center;
+  font-style: italic;
+  font-size: 14px;
+  color: #aaa;
+  background: transparent;
+}
+
+/* Leave Notification */
+.leave-notification {
+  margin: 10px auto;
+  padding: 6px 12px;
+
+  font-size: 13px;
+  font-style: italic;
+  color: #b91c1c;
+
+  background: rgba(239,68,68,0.12);
+  border-radius: var(--radius-sm);
+}
+/* chat gpt update */
+
+@media (max-width: 768px) {
+  #messageInput {
+    font-size: 14px;
+    padding: 12px;
+  }
+  
+  #submit_button {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+}
+
+
+
+/* timestamp css */
+.msg-time {
+  display: block;
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 4px;
+}
+
+/* my message → time right */
+.my-message .msg-time {
+  text-align: right;
+}
+
+/* other message → time left */
+.other-message .msg-time {
+  text-align: left;
+}
+.username {
+  color: #cfaa14;      /* yellow-ish */
+  font-style: italic;  /* extra safe */
+  font-weight: 500;
+}
+.my-message .username {
+  /* color: #86efac;   green */
+   display: none;
+
+}
+
+.other-message .username {
+  color: #93c5fd;   /* blue */
+}
+
+
+
+/* ............................................................................... */
+/* slidebar css */
+/* ================= CHAT SCROLLBAR ================= */
+#messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+#messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#messages::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.25),
+    rgba(255,255,255,0.08)
+  );
+  border-radius: 10px;
+}
+
+#messages::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.45),
+    rgba(255,255,255,0.18)
+  );
+}
+
+/* Firefox */
+#messages {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.3) transparent;
+}
  
-  // const socket = io("http://localhost:3000");
 
-
-
-// const input = document.querySelector('input');
-const input = document.getElementById('messageInput');
-
-const btn = document.querySelector('#submit_button');
-const form = document.querySelector('form');
-const messages = document.querySelector('#messages');
-const usernameInput = document.querySelector('#username');
-const joinbtn = document.querySelector('#joinBtn');
-const joinSection = document.getElementById('joinSection');
-const chatContainer = document.querySelector('.chat_container');
-const typingDiv = document.getElementById('typing-indicator');
-const usersList = document.getElementById('usersList');
-
-// typing indicator ke liye variables..................................
-let typingTimeout;
-let isTyping = false;
-
-input.addEventListener('input', () => {
-  if (!isTyping) {
-    isTyping = true;
-    socket.emit('typing');
-  }
-
-  clearTimeout(typingTimeout);
-
-  typingTimeout = setTimeout(() => {
-    isTyping = false;
-    socket.emit('stopTyping');
-  }, 2000); // 👈 debounce: 2 sec
-});
-
-
-// socket.on('userTyping', (data) => {
-//   typingDiv.textContent = `${data.username} is typing... ✍️`;
-// });
-socket.on('userTyping', (data) => {
-  typingDiv.innerHTML = `${data.username} is typing
-    <span class="typing-dots">     <span>.</span><span>.</span><span>.</span>     </span>
-  `;
-});
-
-socket.on('userStopTyping', () => {
-  typingDiv.textContent = '';
-});
-
-
-// ........................................................................
-
-
-let username = '';
-
-joinbtn.addEventListener('click', ()=> 
-{
-
-
-  // 🔓 AUDIO UNLOCK (browser policy)
-  sendSound.play().then(() => sendSound.pause()).catch(()=>{});
-  receiveSound.play().then(() => receiveSound.pause()).catch(()=>{});
-// 1️⃣ User ne Join button click kiya  // ✔️ browser: “ok user involved”
-
-// 2️⃣ tumne play() call kiya  // ✔️ browser: “sound allowed”
-
-// 3️⃣ turant pause() kar diya  // ✔️ sound sunai bhi nahi diya
-
-// 📌 Lekin browser ke dimaag me ab ye set ho gaya:
-// “Is page pe audio allowed hai”
-
-  username= usernameInput.value.trim();
-
-    if (!username) {
-    alert("Please enter name");
-    return;
-  }
-
-  socket.emit("setUsername", username);
-
-  joinSection.style.display='none';
-  chatContainer.style.display = 'block';
-  
-
-});
-
-
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  if (input.value.trim() === '') return;
-
-  socket.emit('messageSend', input.value);
-
-  
-  sendSound.currentTime = 0; // rewind
-  sendSound.play();          // 🔊 SEND SOUND
-
-
-  input.value = '';
-});
-
-//   socket.on('message_Distributed_by server', (data) => {
-
-//  const li = document.createElement('li');
-
-// // ........time stamp...........................
-
-
-
-// // .............................................
-
-//   if(data.name === '🔔notification') {
-//     li.classList.add('system-message');
-//     li.textContent = data.message;
-//       messages.appendChild(li);
-
-//       // scroll to bottom when new message arrives
-//         messages.scrollTop = messages.scrollHeight; // 👈 ADD
-// //         🔹 scrollHeight kya hota hai? // 👉 total height (andar ka pura content)
-//     return // 👈 IMPORTANT
-//   }
-//   if(data.name === 'leave') {
-//     li.classList.add('leave-notification');
-//     li.textContent = data.message;
-//       messages.appendChild(li);
-//       // scroll to bottom when new message arrives
-//         messages.scrollTop = messages.scrollHeight; // 👈 ADD
-//     return // 👈 IMPORTANT
-//   }
-
-//     // console.log(data);
-//     // console.log("Received data from backend : ", data);
-   
-//     // 👉 check: message mera hai ya nahi
-//   if (data.senderId === socket.id) {
-//     li.classList.add('my-message');
-//   } else {
-//     li.classList.add('other-message')
-//   }
-
-//     // li.textContent = msg;
-//       li.textContent = `${data.name}: ${data.message}`;
-//     messages.appendChild(li);
-
-//     // scroll to bottom when new message arrives
-//         messages.scrollTop = messages.scrollHeight; // 👈 ADD
-
-//   });
-
-  // sidebar ke liye user list update karna
-// // ...........................................................................
-// Step by step socho:
-
-// 1️⃣ li bana
-// 2️⃣ span bana → message ke liye
-// 3️⃣ span bana → time ke liye
-// 4️⃣ dono ko li ke andar daala
-// 5️⃣ li ko #messages me daala
-
-// Visual structure:
-
-// <li class="my-message">
-//   <span>Aman: Hello</span>
-//   <span class="msg-time">10:42 PM</span>
-// </li>
-
-// socket.on('message_Distributed_by server', (data) => {
-
-//   const li = document.createElement('li');
-
-//   // ---------- TIME ----------
-//   const date = new Date(data.time);
-//   const time = date.toLocaleTimeString([], {
-//     hour: '2-digit',
-//     minute: '2-digit'
-//   });
-
-//   // ---------- SYSTEM / LEAVE ----------
-//   if (data.name === '🔔notification') {
-//     li.classList.add('system-message');
-//     li.textContent = data.message;
-//     messages.appendChild(li);
-//     messages.scrollTop = messages.scrollHeight;
-//     return;
-//   }
-
-//   if (data.name === 'leave') {
-//     li.classList.add('leave-notification');
-//     li.textContent = data.message;
-//     messages.appendChild(li);
-//     messages.scrollTop = messages.scrollHeight;
-//     return;
-//   }
-
-//   // ---------- MY / OTHER MESSAGE ----------
-//   if (data.senderId === socket.id) {
-//     li.classList.add('my-message');
-//   } else {
-//     li.classList.add('other-message');
-//   }
-
-//   // 🔹 message text
-//   const msgText = document.createElement('span');
-//   // msgText.textContent = `${data.name} : ${data.message}`;
-//   // msgText.innerHTML = `<i>${data.name}</i> : ${data.message}`;
-//   msgText.innerHTML = `<i class="username">${data.name}</i> : ${data.message}`;
-
-
-
-//   // 🔹 time span
-//   const timeSpan = document.createElement('span');
-//   timeSpan.classList.add('msg-time');
-//   timeSpan.textContent = time;
-
-//   // 🔹 append both inside li
-//   li.appendChild(msgText);
-//   li.appendChild(timeSpan);
-
-//   // 🔹 finally append li
-//   messages.appendChild(li);
-//   messages.scrollTop = messages.scrollHeight;
-// });
-
-socket.on('message_Distributed_by server', (data) => {
-
-  const li = document.createElement('li');
-
-  // ---------- TIME ----------
-  const date = new Date(data.time);
-  const time = date.toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-
-  // ---------- SYSTEM MESSAGE ----------
-  if (data.name === '🔔notification') {
-    li.classList.add('system-message');
-    li.textContent = data.message;
-    messages.appendChild(li);
-    messages.scrollTop = messages.scrollHeight;
-    return;
-  }
-
-  // ---------- LEAVE MESSAGE ----------
-  if (data.name === 'leave') {
-    li.classList.add('leave-notification');
-    li.textContent = data.message;
-    messages.appendChild(li);
-    messages.scrollTop = messages.scrollHeight;
-    return;
-  }
-
-  // ---------- MY / OTHER ----------
-  if (data.senderId === socket.id) {
-    li.classList.add('my-message');
-  } else {
-    li.classList.add('other-message');
-  }
-
-  // 🔥 ONLY innerHTML (NO span create)
-  li.innerHTML = `
-    <i class="username">${data.name} :</i>  ${data.message}
-    <div class="msg-time">${time}</div>
-  `;
-
-  messages.appendChild(li);
-// .........................................................sound receive....................
-const isMine = data.senderId === socket.id;
- if (!isMine) {
-
-    receiveSound.currentTime = 0;
-    receiveSound.play();
-  }
-
-  messages.scrollTop = messages.scrollHeight;
-});
-
-
-
-
-  
-socket.on("users-update", (users) => {
-  usersList.innerHTML = '';
-
-  users.forEach((user) => {
-    const li = document.createElement('li');
-
-    li.innerHTML = `
-      <span class="user-dot"></span>
-      <span>${user}</span>
-    `;
-
-    usersList.appendChild(li);
-  });
-});
-// ...................................................
-
-const menuBtn = document.getElementById("menuBtn");
-const sidebar = document.getElementById("sidebar");
-
-let sidebarOpen = false;
-
-menuBtn.addEventListener("click", () => {
-  sidebarOpen = !sidebarOpen;
-
-  if (sidebarOpen) {
-    sidebar.classList.add("active");
-  } else {
-    sidebar.classList.remove("active");
-  }
-});
-
-/* Optional: click user → auto close sidebar (mobile UX 🔥) */
-usersList.addEventListener("click", () => {
-  sidebar.classList.remove("active");
-  sidebarOpen = false;
-});
-
-input.addEventListener("keydown", (e) => {
-
-  
-  if (e.key === "Enter") {
-    // if (e.key === "Enter" && !e.shiftKey) {
-    //shift+enter textarea pr work krta he not input
-    e.preventDefault();   // new line banne se roko
-    form.requestSubmit(); // message send
-  }
- 
-});
-
-// mute button functionality
-let isMuted = false;
-
-const muteBtn = document.getElementById("muteBtn");
-
-muteBtn.addEventListener("click", () => {
-  isMuted = !isMuted;
-
-  sendSound.muted = isMuted;
-  receiveSound.muted = isMuted;
-
-  muteBtn.textContent = isMuted ? "🔇" : "🔊";
-    muteBtn.classList.toggle("muted", isMuted);
-});
-
-
-</script>
-  
-</body>
-</html>
+/* ================= SIDEBAR SCROLLBAR ================= */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    rgba(147,197,253,0.6),
+    rgba(147,197,253,0.25)
+  );
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(147,197,253,0.8);
+}
+
+/* Firefox */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(147,197,253,0.5) transparent;
+}
+
+
+/* mute btn:  */
+.mute-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #000;              /* black background */
+  color: #fff;                   /* white icon */
+  border: 1px solid #333;
+  font-size: 20px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.25s ease;
+}
+
+/* hover effect */
+.mute-btn:hover {
+  background: #111;
+  transform: scale(1.08);
+}
+
+/* click feel */
+.mute-btn:active {
+  transform: scale(0.95);
+}
+
+/* muted state (optional but 🔥) */
+.mute-btn.muted {
+  background: #1a1a1a;
+  color: #ff4d4d;
+  border-color: #ff4d4d;
+}
