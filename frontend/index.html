@@ -12,6 +12,7 @@
   <div class="joinCard">
     <h1>Enter Your Name to Start Chat</h1>
     <input type="text" id="username" placeholder="Enter your name" />
+     
     <button id="joinBtn">Join Chat</button>
   </div>
 </div>
@@ -65,9 +66,9 @@
 
 <script>
   // backend se connection ke time only use this url
-  const socket = io('https://real-time-chat-app-1-3tv1.onrender.com');
+  // const socket = io('https://real-time-chat-app-1-3tv1.onrender.com');
  
-  // const socket = io("http://localhost:3000");
+  const socket = io("http://localhost:3000");
 
 
 
@@ -158,12 +159,17 @@ form.addEventListener('submit', (e) => {
     li.classList.add('system-message');
     li.textContent = data.message;
       messages.appendChild(li);
+
+      // scroll to bottom when new message arrives
+        messages.scrollTop = messages.scrollHeight; // 👈 ADD
     return // 👈 IMPORTANT
   }
   if(data.name === 'leave') {
     li.classList.add('leave-notification');
     li.textContent = data.message;
       messages.appendChild(li);
+      // scroll to bottom when new message arrives
+        messages.scrollTop = messages.scrollHeight; // 👈 ADD
     return // 👈 IMPORTANT
   }
 
@@ -180,6 +186,9 @@ form.addEventListener('submit', (e) => {
     // li.textContent = msg;
       li.textContent = `${data.name}: ${data.message}`;
     messages.appendChild(li);
+
+    // scroll to bottom when new message arrives
+        messages.scrollTop = messages.scrollHeight; // 👈 ADD
 
   });
 
@@ -221,6 +230,21 @@ usersList.addEventListener("click", () => {
   sidebar.classList.remove("active");
   sidebarOpen = false;
 });
+
+input.addEventListener("keydown", (e) => {
+
+  if (e.key === "Enter") {
+    // if (e.key === "Enter" && !e.shiftKey) {
+    //shift+enter textarea pr work krta he not input
+
+    e.preventDefault();   // new line banne se roko
+    form.requestSubmit(); // message send
+  }
+
+
+});
+
+
 
 
 
