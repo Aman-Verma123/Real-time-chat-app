@@ -1,4 +1,3 @@
-// menu button tk updated
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,6 +22,14 @@ const io = new Server(server, {
 });
 
 app.use(express.json());
+// app.use(express.static("public"));
+const path = require("path");
+
+
+
+app.use(express.static(path.join(__dirname, "../frontend/public")));
+
+
 
 // const users = {};
 
@@ -91,7 +98,9 @@ socket.on('messageSend', (msg) => {
   io.emit('message_Distributed_by server', {
     name: username,
     message: msg,
-    senderId: socket.id
+    senderId: socket.id,
+    time: new Date().toISOString()  
+//     new Date() → abhi ka time and toISOString() → clean standard format
   });
 });
 // typing indicator ke liye event............................
@@ -121,6 +130,7 @@ socket.on('disconnect', () => {
 
     // 🔥 fir updated list bhejo
     io.emit("users-update", Object.values(users));
+    // object → simple array of usernames
 
     // optional: leave message
     io.emit("message_Distributed_by server", {
