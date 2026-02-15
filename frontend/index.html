@@ -71,12 +71,17 @@
 
 <script>
 
-const sendSound = new Audio("/sounds/send.mp3");
-const receiveSound = new Audio("/sounds/receive.mp3");
+
 // localhost ke liye niche wala
 // const sendSound = new Audio("http://localhost:3000/sounds/send.mp3");
 // const receiveSound = new Audio("http://localhost:3000/sounds/receive.mp3");
+const sendSound = new Audio(
+  "https://real-time-chat-app-1-3tv1.onrender.com/sounds/send.mp3"
+);
 
+const receiveSound = new Audio(
+  "https://real-time-chat-app-1-3tv1.onrender.com/sounds/receive.mp3"
+);
 
 
 
@@ -435,4 +440,5 @@ muteBtn.addEventListener("click", () => {
   
 </body>
 </html>
+
 
