@@ -62,11 +62,10 @@
   </div>
 
 <!-- script file -->
- <!-- end me kebal ye hi link chalu krni he -->
- <!-- <script src="https://real-time-chat-app-1-3tv1.onrender.com/socket.io/socket.io.js"></script> -->
+
 <!-- version issu aa sakta he niche wale me  -->
-<!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script> -->
- <script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+ <!-- <script src="/socket.io/socket.io.js"></script> -->
 
 
 
@@ -140,9 +139,9 @@ socket.on('userStopTyping', () => {
 
 let username = '';
 
-joinbtn.addEventListener('click', ()=> 
+joinbtn.addEventListener('click', (e)=> 
 {
-
+ e.preventDefault(); // ✅ now valid
 
   // 🔓 AUDIO UNLOCK (browser policy)
   sendSound.play().then(() => sendSound.pause()).catch(()=>{});
@@ -436,3 +435,4 @@ muteBtn.addEventListener("click", () => {
   
 </body>
 </html>
+
